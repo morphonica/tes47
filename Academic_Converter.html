@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Academic Converter</title>
+<style>
+:root{--bg:#f5f6fa;--card:#fff;--ink:#182033;--muted:#70798b;--line:#e5e8ef;--p:#625bf5}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+.app{display:flex;min-height:100vh}aside{position:fixed;width:235px;inset:0 auto 0 0;background:#11162a;color:white;padding:22px 15px}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800;font-size:20px;padding:5px 9px 28px}.logo{width:38px;height:38px;border-radius:11px;background:#625bf5;display:grid;place-items:center}
+nav{display:grid;gap:6px}nav button{border:0;background:transparent;color:#aeb6c9;text-align:left;padding:12px;border-radius:10px;font-weight:650;cursor:pointer}nav button.active,nav button:hover{background:#262c47;color:#fff}
+.note{position:absolute;bottom:18px;left:17px;right:17px;color:#9da7ba;font-size:11px;line-height:1.5}
+main{margin-left:235px;width:calc(100% - 235px);padding:30px 38px}.top{display:flex;justify-content:space-between;margin-bottom:24px}.eyebrow{font-size:11px;color:var(--p);font-weight:800;letter-spacing:.08em;text-transform:uppercase}h1{margin:5px 0;font-size:30px}.sub{margin:0;color:var(--muted);font-size:14px}.avatar{width:42px;height:42px;border-radius:50%;background:#e9e8ff;color:#5149d8;display:grid;place-items:center;font-weight:800}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 35px #20294412}.hero{padding:23px;margin-bottom:20px}.hero h2{font-size:18px;margin:0 0 5px}.hero p{font-size:13px;color:var(--muted);margin:0 0 17px}.tabs{display:flex;gap:7px;flex-wrap:wrap}.tab{border:1px solid var(--line);background:#f8f9fc;padding:9px 13px;border-radius:10px;cursor:pointer;font-weight:700;color:#596174}.tab.active{background:#eeedff;color:#5149d8;border-color:#dcd9ff}
+.tool{display:none}.tool.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.box{padding:20px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.head h3{margin:0;font-size:15px}.small{font-size:11px;color:var(--muted)}
+textarea{width:100%;height:250px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:14px;outline:0;background:#fafbfe}textarea:focus,input:focus,select:focus{border-color:#aaa5ff;box-shadow:0 0 0 3px #625bf512}.output{height:250px;overflow:auto;white-space:pre-wrap;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fafbfe;font-size:13px;line-height:1.6}.placeholder{color:#929bad}
+.controls{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.btn{border:0;border-radius:9px;padding:9px 13px;font-weight:750;cursor:pointer}.primary{background:var(--p);color:white}.secondary{background:#eef0f6;color:#424b60}.copy{background:#e9f8f2;color:#087f58}.danger{background:#fff0ef;color:#c9433e}
+.counter{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.metric{background:#f8f9fc;padding:12px;border-radius:11px}.metric b{display:block;font-size:19px}.metric span{font-size:10px;color:var(--muted)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:11px;font-weight:750;margin-bottom:4px}.field input,.field select{width:100%;padding:9px;border:1px solid var(--line);border-radius:9px;outline:0}.result{background:#f8f9fc;border-radius:12px;padding:14px;margin-top:12px;font-size:13px;line-height:1.6}
+.grade-row{display:grid;grid-template-columns:1.2fr .7fr .7fr auto;gap:7px;margin-bottom:7px}.grade-row input{padding:9px;border:1px solid var(--line);border-radius:9px;outline:0}.grade-result{text-align:center;background:#f3f2ff;border-radius:13px;padding:18px;margin-top:12px}.grade-result strong{display:block;font-size:34px;color:var(--p)}
+.unitgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.big{text-align:center;background:#f8f9fc;border-radius:13px;padding:35px}.big b{display:block;font-size:35px;color:var(--p);margin:8px}
+footer{text-align:center;color:#969eae;font-size:10px;margin-top:24px}.toast{position:fixed;right:22px;bottom:22px;background:#161b2d;color:#fff;padding:11px 15px;border-radius:10px;opacity:0;transition:.2s}.toast.show{opacity:1}
+@media(max-width:850px){aside{width:70px}.brand span,nav span,.note{display:none}main{margin-left:70px;width:calc(100% - 70px);padding:22px}.grid,.unitgrid{grid-template-columns:1fr}}
+@media(max-width:600px){main{padding:15px}.avatar{display:none}.counter{grid-template-columns:1fr 1fr}.fields{grid-template-columns:1fr}.grade-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside><div class="brand"><div class="logo">AC</div><span>Academic Converter</span></div>
+<nav>
+<button class="active" onclick="openTool('text',this)">✦ <span>Text Converter</span></button>
+<button onclick="openTool('citation',this)">✎ <span>Citation Generator</span></button>
+<button onclick="openTool('grade',this)">⌁ <span>Grade Calculator</span></button>
+<button onclick="openTool('unit',this)">↔ <span>Unit Converter</span></button>
+</nav><div class="note">Tools sederhana untuk mempercepat pekerjaan akademik mahasiswa.</div></aside>
+<main>
+<div class="top"><div><div class="eyebrow">Student productivity</div><h1>Academic Converter</h1><p class="sub">Satu tempat untuk kebutuhan akademik yang sering digunakan.</p></div><div class="avatar">AC</div></div>
+<section class="card hero"><h2>What do you need today?</h2><p>Pilih tool dan kerjakan kebutuhanmu dalam beberapa klik.</p>
+<div class="tabs"><button class="tab active" onclick="openTool('text',null)">Text Converter</button><button class="tab" onclick="openTool('citation',null)">Citation</button><button class="tab" onclick="openTool('grade',null)">Grade</button><button class="tab" onclick="openTool('unit',null)">Unit</button></div></section>
+
+<section id="text" class="tool active"><div class="grid">
+<div class="card box"><div class="head"><h3>Text Input</h3><span class="small" id="char">0 characters</span></div>
+<textarea id="txt" placeholder="Paste teks tugas, laporan, atau catatan di sini..."></textarea>
+<div class="controls"><button class="btn primary" onclick="transform('sentence')">Sentence Case</button><button class="btn secondary" onclick="transform('upper')">UPPERCASE</button><button class="btn secondary" onclick="transform('lower')">lowercase</button><button class="btn secondary" onclick="transform('title')">Title Case</button><button class="btn secondary" onclick="cleanText()">Clean Text</button><button class="btn secondary" onclick="clearText()">Clear</button></div>
+<div class="counter"><div class="metric"><b id="words">0</b><span>Words</span></div><div class="metric"><b id="chars">0</b><span>Characters</span></div><div class="metric"><b id="sentences">0</b><span>Sentences</span></div><div class="metric"><b id="paras">0</b><span>Paragraphs</span></div></div></div>
+<div class="card box"><div class="head"><h3>Converted Result</h3><button class="btn copy" onclick="copyOut()">Copy</button></div><div class="output" id="out"><span class="placeholder">Hasil konversi akan muncul di sini.</span></div></div>
+</div></section>
+
+<section id="citation" class="tool"><div class="card box"><div class="head"><h3>Academic Citation Generator</h3><span class="small">APA 7 • IEEE • MLA 9</span></div>
+<div class="fields"><div class="field"><label>Author</label><input id="author" placeholder="Donald E. Knuth"></div><div class="field"><label>Year</label><input id="year" placeholder="1997"></div><div class="field"><label>Title</label><input id="ctitle" placeholder="The Art of Computer Programming"></div><div class="field"><label>Publisher / Journal</label><input id="publisher" placeholder="Addison-Wesley"></div><div class="field"><label>URL (optional)</label><input id="url" placeholder="https://..."></div><div class="field"><label>Style</label><select id="style"><option>APA 7</option><option>IEEE</option><option>MLA 9</option></select></div></div>
+<div class="controls"><button class="btn primary" onclick="citation()">Generate Citation</button><button class="btn copy" onclick="copyCitation()">Copy</button></div><div class="result" id="citationResult">Isi data sumber, lalu klik Generate Citation.</div></div></section>
+
+<section id="grade" class="tool"><div class="card box"><div class="head"><h3>Weighted Grade Calculator</h3><button class="btn secondary" onclick="addGrade()">＋ Add row</button></div><div id="grades"></div><div class="controls"><button class="btn primary" onclick="calcGrade()">Calculate Final Grade</button><button class="btn secondary" onclick="resetGrades()">Reset</button></div><div class="grade-result">Final Grade<strong id="finalGrade">—</strong><span class="small" id="gradeNote">Total bobot idealnya 100%.</span></div></div></section>
+
+<section id="unit" class="tool"><div class="card box"><div class="head"><h3>Academic Unit Converter</h3><span class="small">Length • Weight • Data • Time</span></div><div class="unitgrid"><div>
+<div class="field"><label>Category</label><select id="cat" onchange="loadUnits()"><option>Length</option><option>Weight</option><option>Data</option><option>Time</option></select></div><div class="field" style="margin-top:10px"><label>Value</label><input id="val" type="number" value="1"></div>
+<div class="fields" style="margin-top:10px"><div class="field"><label>From</label><select id="from"></select></div><div class="field"><label>To</label><select id="to"></select></div></div><div class="controls"><button class="btn primary" onclick="convertUnit()">Convert</button></div></div>
+<div class="big"><span class="small">RESULT</span><b id="unitResult">1</b><span id="unitLabel">—</span></div></div></div></section>
+<footer>Academic Converter • Browser-only demo • Your text is not uploaded anywhere</footer>
+</main></div><div class="toast" id="toast"></div>
+<script>
+const txt=document.getElementById('txt');
+txt.oninput=stats;
+function stats(){let s=txt.value;document.getElementById('words').textContent=s.trim()?s.trim().split(/\s+/).length:0;document.getElementById('chars').textContent=s.length;document.getElementById('char').textContent=s.length+' characters';document.getElementById('sentences').textContent=(s.match(/[.!?]+(?=\\s|$)/g)||[]).length;document.getElementById('paras').textContent=s.trim()?s.split(/\\n\\s*\\n/).filter(x=>x.trim()).length:0}
+function transform(t){let s=txt.value;if(!s.trim())return toast('Masukkan teks terlebih dahulu.');let r=t==='upper'?s.toUpperCase():t==='lower'?s.toLowerCase():t==='title'?s.toLowerCase().replace(/\\b\\w/g,c=>c.toUpperCase()):s.toLowerCase().replace(/(^\\s*\\w|[.!?]\\s+\\w)/g,m=>m.toUpperCase());document.getElementById('out').textContent=r;toast('Text converted.')}
+function cleanText(){if(!txt.value.trim())return toast('Masukkan teks terlebih dahulu.');document.getElementById('out').textContent=txt.value.replace(/[ \\t]+/g,' ').replace(/\\n\\s*\\n\\s*\\n+/g,'\\n\\n').trim();toast('Text cleaned.')}
+function clearText(){txt.value='';document.getElementById('out').innerHTML='<span class="placeholder">Hasil konversi akan muncul di sini.</span>';stats()}
+function copyOut(){let s=document.getElementById('out').innerText;if(s.includes('Hasil konversi'))return toast('Belum ada hasil.');navigator.clipboard.writeText(s);toast('Copied.')}
+function citation(){let a=document.getElementById('author').value||'Author',y=document.getElementById('year').value||'n.d.',t=document.getElementById('ctitle').value||'Title',p=document.getElementById('publisher').value||'Publisher',u=document.getElementById('url').value,st=document.getElementById('style').value;let r=st==='APA 7'?`${a}. (${y}). ${t}. ${p}.${u?' '+u:''}`:st==='IEEE'?`${a}, "${t}," ${p}, ${y}.${u?' [Online]. Available: '+u:''}`:`${a}. "${t}." ${p}, ${y}.${u?' '+u:''}`;document.getElementById('citationResult').textContent=r;toast('Citation generated.')}
+function copyCitation(){navigator.clipboard.writeText(document.getElementById('citationResult').innerText);toast('Citation copied.')}
+function addGrade(n='',s='',w=''){let d=document.createElement('div');d.className='grade-row';d.innerHTML=`<input placeholder="Component" value="${n}"><input type="number" min="0" max="100" placeholder="Score" value="${s}"><input type="number" min="0" max="100" placeholder="Weight %" value="${w}"><button class="btn danger" onclick="this.parentElement.remove()">×</button>`;document.getElementById('grades').appendChild(d)}
+function calcGrade(){let total=0,w=0;document.querySelectorAll('.grade-row').forEach(r=>{let s=+r.children[1].value||0,p=+r.children[2].value||0;total+=s*p/100;w+=p});document.getElementById('finalGrade').textContent=w?total.toFixed(2):'—';document.getElementById('gradeNote').textContent='Total bobot: '+w+'%'+(w===100?' • Perfect!':w<100?' • Masih ada bobot.':' • Melebihi 100%.')}
+function resetGrades(){document.getElementById('grades').innerHTML='';addGrade('Assignment',85,20);addGrade('Midterm',78,30);addGrade('Final',82,40);addGrade('Attendance',100,10);document.getElementById('finalGrade').textContent='—'}
+const units={Length:{Meter:1,Centimeter:.01,Kilometer:1000,Foot:.3048,Inch:.0254},Weight:{Gram:1,Kilogram:1000,Pound:453.59237,Ounce:28.3495},Data:{Byte:1,Kilobyte:1024,Megabyte:1048576,Gigabyte:1073741824},Time:{Second:1,Minute:60,Hour:3600,Day:86400}};
+function loadUnits(){let u=units[cat.value],a=document.getElementById('from'),b=document.getElementById('to');a.innerHTML=b.innerHTML=Object.keys(u).map(x=>`<option>${x}</option>`).join('');b.selectedIndex=1}
+function convertUnit(){let u=units[cat.value],v=+document.getElementById('val').value||0,f=from.value,t=to.value,r=v*u[f]/u[t];document.getElementById('unitResult').textContent=Number.isInteger(r)?r:r.toFixed(6).replace(/0+$/,'').replace(/\\.$/,'');document.getElementById('unitLabel').textContent=t;toast('Converted.')}
+function openTool(id,el){document.querySelectorAll('.tool').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));let tabs=[...document.querySelectorAll('.tab')];tabs[['text','citation','grade','unit'].indexOf(id)].classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('nav button')[['text','citation','grade','unit'].indexOf(id)].classList.add('active')}
+function toast(s){let x=document.getElementById('toast');x.textContent=s;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1600)}
+resetGrades();loadUnits();
+</script>
+</body></html>
